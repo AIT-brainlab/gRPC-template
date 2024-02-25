@@ -1,0 +1,8 @@
+version: '3.9'
+
+include:
+  - python-server/docker-compose.yaml
+
+networks:
+  grpc:
+    external: true

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package greetPackage;
+
+service Greeter {
+  rpc SayHello(HelloRequest) returns (HelloReply);
+  rpc ServerStream_SayHello(HelloRequest) returns (stream HelloReply);
+  rpc ClientStream_SayHello(stream HelloRequest) returns (HelloReply);
+  rpc BiDirection_SayHello(stream HelloRequest) returns (stream HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
+
+message DelayedReply{
+  string message = 1;
+  repeated HelloRequest request = 2;
+}
