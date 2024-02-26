@@ -7,7 +7,6 @@ Table of content
   - [Table of content](#table-of-content)
   - [What is `gRPC`](#what-is-grpc)
   - [In this Repository](#in-this-repository)
-  - [To use this Repository](#to-use-this-repository)
   - [Resources](#resources)
 
 
@@ -40,14 +39,8 @@ First, someone designed the interface via a `.proto` file.
 Then, both serve and client (in `Python`) compile the `.proto` using `python3 -m grpc_tools.protoc --proto_path=../protos --python_out=./services/ --grpc_python_out=./services/ ../protos/greet.proto` to compile/generate an interface in `Python` language.
 Last, implement the logic.
 
-## To use this Repository
-
-1. Create a `grpc` network as a bridge in your docker environment.
-2. Run `docker compose up` to spawn server and client.
-
-
 ## Resources
 
-- Best YouTube on `Protocal Buffer` https://www.youtube.com/watch?v=46O73On0gyI&t=93s
+- Best YouTube on `Protocol Buffer` https://www.youtube.com/watch?v=46O73On0gyI&t=93s
 - Best YouTube on `gRPC` https://www.youtube.com/watch?v=Yw4rkaTc0f8&t=2913s
 - Best YouTube on `gRPC` in `Python` https://www.youtube.com/watch?v=WB37L7PjI5k
