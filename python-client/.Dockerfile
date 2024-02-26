@@ -43,4 +43,4 @@ COPY ./src ${WORKDIR}
 # Clear apt for optimizing image size
 RUN apt clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-CMD tail -f /dev/null
+CMD sleep infinity

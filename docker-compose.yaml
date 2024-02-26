@@ -2,6 +2,7 @@ version: '3.9'
 
 include:
   - python-server/docker-compose.yaml
+  - python-client/docker-compose.yaml
 
 networks:
   grpc:

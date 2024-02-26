@@ -1,8 +1,8 @@
 version: '3.9'
 
 services:
-  server:
-    image: grpc-python-server:latest
+  client:
+    image: grpc-python-client:latest
     build: 
       context: .
       dockerfile: .Dockerfile
