@@ -15,10 +15,6 @@ services:
     networks:
       - grpc
 
-networks:
-  grpc:
-    external: true
-
 volumes:
   venv:
   vscode-server:

@@ -6,6 +6,11 @@ Table of content
 - [gRPC Template](#grpc-template)
   - [Table of content](#table-of-content)
   - [What is `gRPC`](#what-is-grpc)
+    - [Mode of operations](#mode-of-operations)
+      - [Mode 1. Unary RPC](#mode-1-unary-rpc)
+      - [Mode 2. Server streaming RPC](#mode-2-server-streaming-rpc)
+      - [Mode 3. Client streaming RPC](#mode-3-client-streaming-rpc)
+      - [Mode 4. Bidirectional streaming RPC](#mode-4-bidirectional-streaming-rpc)
   - [In this Repository](#in-this-repository)
   - [Resources](#resources)
 
@@ -31,6 +36,32 @@ With `Protocol Buffer` you will need to define the `package`.
 Both server and client will use this `Protocol Buffer` as an API reference.
 
 The only limitation of `gRPC` is that it can not run on browsers ... yet.
+
+### Mode of operations
+
+[link](https://grpc.io/docs/what-is-grpc/core-concepts/)
+
+`gRPC` has four modes of operation. 
+But it is easier to think about *which side wants to stream data*.
+
+#### Mode 1. [Unary RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#unary-rpc)
+
+This is equal to `REST API` where a client makes a single request and a server replies with a single message.
+
+#### Mode 2. [Server streaming RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#server-streaming-rpc)
+
+A client makes a single request but this time a server replies with a stream of data.
+This is good for downloading big files.
+
+#### Mode 3. [Client streaming RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#client-streaming-rpc)
+
+A client sends a stream of data. At the end, a server replies with a single message.
+This is good for uploading big files.
+
+#### Mode 4. [Bidirectional streaming RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#bidirectional-streaming-rpc)
+
+This mode is similar to `WebSocket` where both server and client expecting a data from both side at all time.
+
 
 ## In this Repository
 
