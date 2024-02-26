@@ -173,3 +173,4 @@ The same `service/simple.py` file also does the necessary import of all the `pb2
 - Best YouTube on `Protocol Buffer` https://www.youtube.com/watch?v=46O73On0gyI&t=93s
 - Best YouTube on `gRPC` https://www.youtube.com/watch?v=Yw4rkaTc0f8&t=2913s
 - Best YouTube on `gRPC` in `Python` https://www.youtube.com/watch?v=WB37L7PjI5k
+- GitHub `Python` Example https://github.com/grpc/grpc/tree/master/examples/python
