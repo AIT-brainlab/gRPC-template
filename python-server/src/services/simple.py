@@ -60,5 +60,3 @@ class SimpleService(simple_pb2_grpc.SimpleMessageServicer):
                 replyMessage.requestMessage.sentFrom = request.sentFrom
                 replyMessage.requestMessage.message = request.message
                 yield replyMessage
-        # print(f"Simple_BiDirection called: {request.id=} {request.sentFrom=} {request.message=}")
-        # return super().Simple_BiDirection(request=request_iterator, context=context)

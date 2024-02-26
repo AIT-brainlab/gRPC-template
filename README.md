@@ -11,7 +11,10 @@ Table of content
       - [Mode 2. Server streaming RPC](#mode-2-server-streaming-rpc)
       - [Mode 3. Client streaming RPC](#mode-3-client-streaming-rpc)
       - [Mode 4. Bidirectional streaming RPC](#mode-4-bidirectional-streaming-rpc)
-  - [In this Repository](#in-this-repository)
+    - [Protocol Buffer Compiler (protoc)](#protocol-buffer-compiler-protoc)
+  - [Our Implementation](#our-implementation)
+    - [Server Side](#server-side)
+    - [Client Side](#client-side)
   - [Resources](#resources)
 
 
@@ -60,15 +63,100 @@ This is good for uploading big files.
 
 #### Mode 4. [Bidirectional streaming RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#bidirectional-streaming-rpc)
 
-This mode is similar to `WebSocket` where both server and client expecting a data from both side at all time.
+This mode is similar to `WebSocket` where both the server and client expect data from both sides at all times.
 
+### Protocol Buffer Compiler (protoc)
 
-## In this Repository
+When you define the services and message in `.proto` format, you will want to implement the service in your app with your programming language of choice.
+The library provides you with a compiler called `protoc`.
+In `Python`, you can install this tool via `pip`.
 
-We show the three components of a `gRPC` API in `Python`.
-First, someone designed the interface via a `.proto` file.
-Then, both serve and client (in `Python`) compile the `.proto` using `python3 -m grpc_tools.protoc --proto_path=../protos --python_out=./services/ --grpc_python_out=./services/ ../protos/greet.proto` to compile/generate an interface in `Python` language.
-Last, implement the logic.
+```sh
+pipenv install grpc_tools
+```
+
+Then, you can call the compiler with 
+
+```sh
+python3 -m grpc_tools.protoc
+```
+
+Let's say we have all the `.proto` files in `../protos` folders. 
+To generate all `.proto`, you can use this command.
+
+```sh
+# --proto_path: where the `.proto` is 
+# --python_out: path to save the generated `_pb2.py` which define the proto object
+# --pyi_out:    path to save the generated `_pb2.pyi` which define the interface of proto object
+# --grpc_python_out: path to save the generated `_pb2_grpc.py` which define the `gRPC` interface for both Server and Client.
+# The argument can be a path to either (1) single `.proto` file or (2) folder contains multiple `.proto` files.
+python3 -m grpc_tools.protoc --proto_path=../protos/ --python_out=./services/ --pyi_out=./services --grpc_python_out=./services ../protos/simple.proto
+```
+
+## Our Implementation
+
+Our implementation follows this scenario.
+
+1. Someone defines the `gRPC` interface in `protos` folder.
+2. The server and client then implement the logic on their project.
+3. We simulate two different hosts via `Docker`.
+
+### Server Side
+
+```txt
+src/
+  |- services/
+    |- simple_pb/
+        |- simple_pb2_grpc.py
+        |- simple_pb2.py
+        |- simple_pb2.pyi
+    |- simple.py
+  |- server.py
+```
+
+To hide all the service-dependent logic, we store all the generated `pb2` files in `services/simple_pb/` and implement the gRPC interface class in `services/simple.py`.
+One extra step that we have to do is change the import code in `simple_pb2_grpc.py` at line 5 from
+
+```python
+import simple_pb2 as simple__pb2
+```
+
+to
+
+```python
+from . import simple_pb2 as simple__pb2
+```
+
+The interface class in `services/simple.py` will require adding a service handler in the `__init__` function at line 8
+
+```python
+simple_pb2_grpc.add_SimpleMessageServicer_to_server(servicer=self, server=server)
+```
+
+Thus, if the server wants to add/remove services, it can do that by simply passing a `server` variable to the interface class at line 9 in `server.py`.
+
+```python
+SimpleService(server=server)
+```
+
+### Client Side
+
+The client side is done in a similar fashion
+
+```txt
+src/
+  |- services/
+    |- simple_pb/
+        |- simple_pb2_grpc.py
+        |- simple_pb2.py
+        |- simple_pb2.pyi
+    |- simple.py
+  |- client.py
+```
+
+However, in the real implementation, it may be difficult to hide the `pb2` object because the app has to consume it.
+So the `service/simple.py` only has `get_stub()` function that creates a connection to the server (we did this because services may be served by different servers) and returns the stub.
+The same `service/simple.py` file also does the necessary import of all the `pb2` files inside the `services/simple_pb` so the `client.py` does not need to dive into the package.
 
 ## Resources
 
