@@ -1,5 +1,7 @@
 # gRPC Template
 
+This document is not for teaching but is done mostly for quick reference when I come back to this project.
+
 Table of content
 ---
 
@@ -11,6 +13,7 @@ Table of content
       - [Mode 2. Server streaming RPC](#mode-2-server-streaming-rpc)
       - [Mode 3. Client streaming RPC](#mode-3-client-streaming-rpc)
       - [Mode 4. Bidirectional streaming RPC](#mode-4-bidirectional-streaming-rpc)
+  - [Step to build an API/RPC with gRPC](#step-to-build-an-apirpc-with-grpc)
     - [Protocol Buffer Compiler (protoc)](#protocol-buffer-compiler-protoc)
   - [Our Implementation](#our-implementation)
     - [Server Side](#server-side)
@@ -64,6 +67,13 @@ This is good for uploading big files.
 #### Mode 4. [Bidirectional streaming RPC](https://grpc.io/docs/what-is-grpc/core-concepts/#bidirectional-streaming-rpc)
 
 This mode is similar to `WebSocket` where both the server and client expect data from both sides at all times.
+
+
+## Step to build an API/RPC with gRPC
+
+1. Define the service and message in `.proto`
+2. Implement the login in the app following the `.proto` file
+
 
 ### Protocol Buffer Compiler (protoc)
 
