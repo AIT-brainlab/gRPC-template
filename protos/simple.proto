@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package simplePackage;
+
+service SimpleMessage {
+  rpc Simple_Unary(RequestMessage) returns (ReplyMessage);
+  rpc Simple_ServerStream(RequestMessage) returns (stream ReplyMessage);
+  rpc Simple_ClientStream(stream RequestMessage) returns (ReplyMessage);
+  rpc Simple_BiDirection(stream RequestMessage) returns (stream ReplyMessage);
+}
+
+message RequestMessage {
+  int32 id = 1;
+  string sentFrom = 2;
+  string message = 3;
+}
+
+message ReplyMessage {
+  int32 id = 1;
+  string sentFrom = 2;
+  string message = 3;
+  RequestMessage requestMessage = 4;
+}

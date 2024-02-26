@@ -1,45 +1,56 @@
-
-from services import greet_pb2, greet_pb2_grpc
+from services.simple import get_stub, simple_pb2
 import time
-import grpc
 
-def get_client_stream_request():
-    while True:
-        name = input("Just give me your name: ")
-        if name == "": break
-        hello_request = greet_pb2.HelloRequest(name = name)
-        yield hello_request
+def message_generator():
+    for i in range(10):
+        message = f"Hi Server!!! This is message {i}"
+        requestMessage = simple_pb2.RequestMessage(id=i, sentFrom="client", message=message)
+        yield requestMessage
+        # simulate latency
         time.sleep(1)
 
+def simple_unary_call():
+    requestMessage = simple_pb2.RequestMessage(id=1, sentFrom="client", message="Hi Server")
+    stub = get_stub()
+    reply = stub.Simple_Unary(requestMessage)
+    print(f"Server Reply: {reply}")
+
+def simple_serverstream_call():
+    requestMessage = simple_pb2.RequestMessage(id=1, sentFrom="client", message="Hi Server")    
+    stub = get_stub()
+    replies = stub.Simple_ServerStream(requestMessage)
+    for reply in replies:
+        print(f"Server Reply: {reply}")
+
+def simple_clientstream_call():
+    stub = get_stub()
+    reply = stub.Simple_ClientStream(message_generator())
+    print(f"Server Reply: {reply}")
+
+
+def simple_bidirection_call():
+    stub = get_stub()
+    replies = stub.Simple_BiDirection(message_generator())
+    for reply in replies:
+        print(f"Server Reply: {reply}")
+
 def run():
-    with grpc.insecure_channel('localhost:5000') as channel:
-        stub = greet_pb2_grpc.GreeterStub(channel)
-        print("1. SayHello - Unary")
-        print("2. SayHello - ServerStream")
-        print("3. SayHello - ClientStream")
-        print("4. SayHello - BiDirection")
-        rpc_call = input("Which rpc you would like to call: ")
-
-        if(rpc_call == "1"):
-            hello_request = greet_pb2.HelloRequest(name="Akraradet")
-            hello_reply = stub.SayHello(hello_request)
-            print(f"The reply: {hello_reply}")
-        elif(rpc_call == "2"):
-            hello_request = greet_pb2.HelloRequest(name="Akraradet")
-            hello_replies = stub.ServerStream_SayHello(hello_request)
-            for hello_reply in hello_replies:
-                print(f"The reply: {hello_reply}")
-        elif(rpc_call == "3"):
-
-            delayed_reply = stub.ClientStream_SayHello(get_client_stream_request())
-            print(f"Reply: {delayed_reply}")
-
-        elif(rpc_call == "4"):
-            responses = stub.BiDirection_SayHello(get_client_stream_request())
-            for response in responses:
-                print(response)
-        else:
-            print("Undefined")
+    print(f"1. Simple_Unary")
+    print(f"2. Simple_ServerStream")
+    print(f"3. Simple_ClientStream")
+    print(f"4. Simple_BiDirection")
+    call_id = input(f"Select what function you want to try: ")
+    if(call_id == "1"):
+        simple_unary_call()
+    elif(call_id == "2"):
+        simple_serverstream_call()
+    elif(call_id == "3"):
+        simple_clientstream_call()
+    elif(call_id == "4"):
+        simple_bidirection_call()
+    else:
+        print("Not implemented")
 
 if __name__ == "__main__":
     run()
+    
